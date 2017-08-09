@@ -1,10 +1,6 @@
     @name = 'needy-toothpaste:local_redis'
 
-Use notepack.io (the same toolset as socket.io-redis)
-
-    Notepack = require 'notepack.io'
-
-But try out ioredis (since it supports Promises natively)
+Try out ioredis (since it supports Promises natively)
 
     Redis = require 'ioredis'
 
@@ -16,9 +12,22 @@ But try out ioredis (since it supports Promises natively)
 
       client = new Redis @cfg.local_redis
 
+      encode = switch process.env.NEEDY_TOOTHPASTE
+
+Use notepack.io (the same toolset as socket.io-redis).
+
+        when 'notepack.io'
+          Notepack = require 'notepack.io'
+          (data) -> Notepack.encode data
+
+Default is to use JSON.
+
+        else
+          (data) -> JSON.stringify data
+
       publish = (channel,data) ->
         client
-        .publish channel, Notepack.encode data
+        .publish channel, encode data
         .catch (error) ->
           debug "publish: #{error.stack}"
 
