@@ -14,7 +14,7 @@ But try out ioredis (since it supports Promises natively)
 
       return unless @cfg.local_redis?
 
-      redis = new Redis @cfg.local_redis
+      client = new Redis @cfg.local_redis
 
       publish = (channel,data) ->
         client
