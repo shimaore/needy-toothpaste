@@ -10,7 +10,15 @@ Try out ioredis (since it supports Promises natively)
 
       return unless @cfg.local_redis?
 
+      {host} = @cfg
+
       client = new Redis @cfg.local_redis
+      client.on 'connect', -> debug 'connect'
+      client.on 'ready', -> debug 'ready'
+      client.on 'error', (error) -> debug "error #{error.stack ? error.message}"
+      client.on 'close', -> debug 'close'
+      client.on 'reconnecting', -> debug 'reconnectin'
+      client.on 'end', -> debug 'end'
 
       encode = switch process.env.NEEDY_TOOTHPASTE
 
@@ -33,3 +41,12 @@ Default is to use JSON.
 
       @cfg.statistics.on 'report', (report) ->
         publish 'huge-play:report', report
+
+      @cfg.statistics.on 'queuer', (report) ->
+        publish 'huge-play:queuer', report
+
+      @cfg.statistics.on 'add', (data) ->
+        publish 'huge-play:add',
+          host: host
+          key: data.key
+          value: data.value.toJSON()
