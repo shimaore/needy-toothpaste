@@ -1,7 +1,7 @@
 {
   "name": "needy-toothpaste",
   "version": "1.2.0",
-  "description": "",
+  "description": "CCNQ4 middleware for event publication",
   "main": "index.js",
   "directories": {
     "test": "test"
